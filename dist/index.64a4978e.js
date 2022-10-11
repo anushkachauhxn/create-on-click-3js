@@ -551,7 +551,7 @@ scene.add(ambientLight);
 const directionalLight = new _three.DirectionalLight(0xffffff, 0.8);
 scene.add(directionalLight);
 directionalLight.position.set(0, 50, 0);
-// Main [https://stackoverflow.com/a/47695749/12302691]
+// Main
 const mouse = new _three.Vector2(); // normalised position of cursor
 const intersectionPoint = new _three.Vector3(); // co-ordinates of point where plane intersects with the ray
 const planeNormal = new _three.Vector3(); // unit normal vector that indicates the direction of the plane
