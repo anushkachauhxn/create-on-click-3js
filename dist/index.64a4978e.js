@@ -551,6 +551,37 @@ scene.add(ambientLight);
 const directionalLight = new _three.DirectionalLight(0xffffff, 0.8);
 scene.add(directionalLight);
 directionalLight.position.set(0, 50, 0);
+// Main [https://stackoverflow.com/a/47695749/12302691]
+const mouse = new _three.Vector2(); // normalised position of cursor
+const intersectionPoint = new _three.Vector3(); // co-ordinates of point where plane intersects with the ray
+const planeNormal = new _three.Vector3(); // unit normal vector that indicates the direction of the plane
+const plane = new _three.Plane(); // plane to be created whenever cursor changes position
+const raycaster = new _three.Raycaster(); // emits the ray between camera and cursor
+window.addEventListener("mousemove", (e)=>{
+    // update 'mouse' to normalised co-ordinates of cursor
+    mouse.x = e.clientX / window.innerWidth * 2 - 1;
+    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    // update planeNormal with co-ordinates of unit normal vector
+    planeNormal.copy(camera.position).normalize();
+    // create the plane
+    plane.setFromNormalAndCoplanarPoint(planeNormal, scene.position); // scene.position is same as 'new THREE.Vector3(0, 0, 0)'
+    // create the ray
+    raycaster.setFromCamera(mouse, camera);
+    // call intersect method and store it in 'intersectionPoint'
+    raycaster.ray.intersectPlane(plane, intersectionPoint);
+});
+window.addEventListener("click", ()=>{
+    // create the sphere and position it at intersection
+    const sphereGeo = new _three.SphereGeometry(0.125, 30, 30);
+    const sphereMat = new _three.MeshStandardMaterial({
+        color: 0xffea00,
+        metalness: 0,
+        roughness: 0
+    });
+    const sphereMesh = new _three.Mesh(sphereGeo, sphereMat);
+    scene.add(sphereMesh);
+    sphereMesh.position.copy(intersectionPoint);
+});
 // Animations
 function animate() {
     renderer.render(scene, camera);
